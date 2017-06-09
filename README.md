@@ -12,15 +12,16 @@ Initial Configuration:
    ->Create a Newfile inside R305 folder.
    ->Import module:
 	
-      =>From Finger import Finger
+      From Finger import Finger
+      
    ->Initialize it with serial port and baud rate or by default it uses serial port as "/dev/ttyUSB0" and baudrate as 57600.
    ->create an Finger object
 	
-      =>f=Finger()
+      f=Finger()
 		
       or
 		
-      =>f=Finger(SerialPortNumber,Baudrate)
+      f=Finger(SerialPortNumber,Baudrate)
 
 We have currently implemented 4 functions.
 1:Enroll
@@ -31,7 +32,9 @@ We have currently implemented 4 functions.
 
 1:Enroll
     Usage:
-        => f.enroll()
+    
+         f.enroll()
+	 
 The Enroll function takes the finger two times.
 When it asks for Put finger, keep your finger on the sensor and press enter a red light on the sensor blinks.
 If you didnot put your finger it shows Finger Not found.
@@ -43,16 +46,21 @@ once all are correct it prints Finger print Enrolled.
 
 2:Match
    Usage:
-     => f.match()
+   
+   f.match()
    
 It matches for the finger from all the finger prints that are enrolled.
 
 3:Delete
      Usage:
-        => f.delete()
+       
+       f.delete()
+       
 It delets enrolled finger prints from start id to N number or fingerprints.
 
 4:Empty
      Usage:
-        => f.empty()
+        
+	f.empty()
+	
 It clears all the enrolled fingerprints.
