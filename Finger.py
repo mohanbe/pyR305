@@ -36,19 +36,6 @@ class Finger:
         self.f.delete(fid,n)
     def empty(self):
         self.f.empty()
-g=Finger()
-while True:
-    i=raw_input("1:Enroll\t2:Match\t 3:Delete\t4:Empty\t5:Exit\n")
-    if(i=='1'):
-        g.enroll()
-    elif(i=='2'):
-        g.match();
-    elif(i=='3'):
-        g.delete()
-    elif(i=='4'):
-        g.empty()
-    else:
-        break;
 
         
 
