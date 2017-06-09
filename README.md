@@ -47,20 +47,20 @@ once all are correct it prints Finger print Enrolled.
 2:Match
    Usage:
    
-   f.match()
+       f.match()
    
 It matches for the finger from all the finger prints that are enrolled.
 
 3:Delete
      Usage:
        
-       f.delete()
+        f.delete()
        
 It delets enrolled finger prints from start id to N number or fingerprints.
 
 4:Empty
      Usage:
         
-	f.empty()
+	    f.empty()
 	
 It clears all the enrolled fingerprints.
