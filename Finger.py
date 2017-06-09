@@ -2,10 +2,10 @@ import struct as st
 import serial as ser
 import time,sys
 from PIL import Image
-head=[0xef01,0x00000000,0x01]
-print(type(head[2]))
-s=ser.Serial("/dev/ttyUSB1",57600);
+head=[0xef01,0xffffffff,0x01]
 class FingerPrint():
+    def __init__(self,ttl="/dev/ttyUSB0",port=57600):
+        self.s=ser.Serial(ttl,port);
     def pack(self,data):
        a=sum(head[-1:]+data)
        pack_str='!HIB'+'B'*len(data)+'H'
@@ -19,23 +19,23 @@ class FingerPrint():
        return ret[1]
     def readpac(self,):
         time.sleep(1)
-        w=s.inWaiting()
+        w=self.s.inWaiting()
         ret=[]
         if(w>=9):
-           sd=s.read(9)
+           sd=self.s.read(9)
            ret.extend(st.unpack('!HIBH',sd))
            ln=ret[-1]
            time.sleep(1)
-           w=s.inWaiting()
+           w=self.s.inWaiting()
            if w>=ln:
-              sd=s.read(ln)
+              sd=self.s.read(ln)
               form='!'+'B'*(ln-2)+'H'
               ret.extend(st.unpack(form,sd))
            return ret
     def writepac(self,data):
        d=self.pack(data)
        #print(repr(d))
-       s.write(d)
+       self.s.write(d)
     def getimg(self):
        data=[0x00,0x03,0x01]
        self.writepac(data)
@@ -54,7 +54,8 @@ class FingerPrint():
         d=self.readpac()
         x=list(d)[4]
         if(x==0):
-          print("Converted to Charfile")
+          return 0
+          #print("Converted to Charfile")
         elif(x==6):
           print("Fingerprint Corrupt")
         else:
@@ -88,9 +89,9 @@ class FingerPrint():
         d=self.readpac()
         x=list(d)[4]
         if(x==0):
-          print("Fingerprint Found:-")
-          print("ID:")
-          print(list(d)[6])
+          #print("Fingerprint Found:-")
+          #print("ID:")
+          #print(list(d)[6])
           return list(d)[6]
         elif x==9:
             print("No Match Found")
@@ -137,7 +138,8 @@ class FingerPrint():
         d=self.readpac()
         x=list(d)[4]
         if(x==0):
-          print("Charfile Created")
+          return 0
+          #print("Charfile Created")
         elif x==21:
             print("Failed")
         else:
@@ -150,7 +152,7 @@ class FingerPrint():
         if(x==0):
           print("Charfile Ready")
           d=self.readpac()
-          print(list(d[5:]))
+          #print(list(d[5:]))
           print(len(list(d[5:])))
           im=Image.frombytes('L',(16,16),str(d[5:]))
           im.show()
@@ -158,45 +160,8 @@ class FingerPrint():
             print("Failed")
         else:
             print(x)
-f=FingerPrint()
-f.getimg()
-f.tz()
-f.upchar()
-def enroll():
-  raw_input("Put Finger:")
-  f.getimg()
-  f.genchar(1)
-  r=f.search()
-  if(r!=-1):
-      print("Finger Already Taken at:"+str(r))
-      sys.exit()
-  raw_input("Put Finger Again:")
-  f.getimg()
-  f.genchar(2)
-  y=f.regmodel()
-  if y:
-   fid=raw_input("Enter ID (0-254):")
-   f.store(fid)
-  else:
-   print("Error")
-def match():
-     raw_input("Want T0 search")
-     f.getimg()
-     f.genchar(1)
-     r=f.search()
-     if(r!=-1):
-       print("Finger Found at:"+str(r))
-while True:
-    i=raw_input("1:Enroll\t2:Match\t 3:Delete\t4:Empty\t5:Exit\n")
-    if(i=='1'):
-        enroll()
-    elif(i=='2'):
-        match();
-    elif(i=='3'):
-        fid=raw_input("Enter Start Address")
-        n=raw_input("Enter No of Fingerprints")
-        f.delete(fid,n)
-    elif(i=='4'):
-        f.empty()
-    else:
-        break;
+    def setaddress(self):
+        data=[0x00,0x07,0x15,0xff,0xff,0xff,0xff]
+        self.writepac(data)
+        d=self.readpac()
+        x=list(d)[4]
