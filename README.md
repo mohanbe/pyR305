@@ -11,11 +11,15 @@ To use it Connect the R305 finger print module to Raspberry pi or PC using a Ser
 Initial Configuration:
    ->Create a Newfile inside R305 folder.
    ->Import module:
+	
       =>From Finger import Finger
    ->Initialize it with serial port and baud rate or by default it uses serial port as "/dev/ttyUSB0" and baudrate as 57600.
    ->create an Finger object
+	
       =>f=Finger()
+		
       or
+		
       =>f=Finger(SerialPortNumber,Baudrate)
 
 We have currently implemented 4 functions.
